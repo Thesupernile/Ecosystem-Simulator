@@ -1,4 +1,4 @@
-#include "animal.cpp"
+#include "herbivore.h"
 
 class herbivore : public animal
 {
