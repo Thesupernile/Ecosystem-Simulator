@@ -3,7 +3,7 @@
 namespace Ecosystem {
     static void instructions() {
         std::string userResponse;
-        std::cout << "\n\n\n";
+        std::cout << "\n";
         std::cout << "Ecosystem Simulator:\n\n";
         std::cout << "The ecosystem simulator will start with a given number of plants, herbivores and carnivores\n";
         std::cout << "Each \"Day\" an animal must find the appropriate amount of food or it will lose health\n";
@@ -12,8 +12,26 @@ namespace Ecosystem {
         std::cout << "The simulator will tell you each day how many of each animal type and how many plants there are\n";
         std::cout << "Press any key then enter to continue...\n";
         std::cin >> userResponse;
-        std::cout << "\n\n\n";
+        std::cout << "\n";
     }
+
+    static void reportEcoInformation(std::vector<Animals::Animal> animalsList){
+        int numCarnivores = 0;
+        int numHerbivores = 0;
+        int numPlants = 0;
+        int numStarvingAnimals = 0;
+
+        for (int i = 0; i < animalsList.size(); i++){
+            
+        }
+
+        std::cout << "Ecosystem Information:\n\n";
+        std::cout << "There are " << numPlants << "plants in the ecosystem.\n";
+        std::cout << "There are " << animalsList.size() << "animals in the ecosystem.\n";
+        std::cout << "Of these, " << numHerbivores << " are herviores and " << numCarnivores << "are carnivores.\n";
+        std::cout << numStarvingAnimals << " animals didn't find food today.\n";
+    }
+
 }
 
 int main() {
@@ -56,6 +74,8 @@ int main() {
         for (int i = 0; i < animalList.size(); i++){
             animalList[i].dayProcess();
         }
+
+        Ecosystem::reportEcoInformation(animalList);
 
         while (userInput != "y" && userInput != "n"){
             std::cout << "Would you like to simulate another day? Y/N\n";
