@@ -1,11 +1,18 @@
-#include "herbivore.h"
+#include "herbivore.hpp"
 
-class herbivore : public animal
-{
-	private:
-		
-	public:
-		herbivore(int xCoord, int yCoord) : animal(xCoord, yCoord) {
-			_canEatPlant = true;
-		}
-};
+namespace Animals {
+	class Herbivore : public Animal
+	{
+		private:
+
+		public:
+			Herbivore(int xCoord, int yCoord) : Animal(xCoord, yCoord) {
+				_canEatPlant = true;
+				_canEatAnimal = false;
+			}
+
+			void dayProcess(){
+
+			}
+	};
+}
