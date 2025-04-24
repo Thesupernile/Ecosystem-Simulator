@@ -17,10 +17,10 @@ namespace Animals {
 			int _health = 0;
 			int _speed = 0;
 
-			int searchForFood() {
+			int* searchForFood() {
 				int coordinates[] = { 0, 0 };
 
-				return *coordinates;
+				return coordinates;
 			}
 
 		public:
@@ -30,7 +30,10 @@ namespace Animals {
 				_hunger = 0;
 				_health = ALLOWEDHUNGRYDAYS;
 			}
-			virtual void dayProcess() = 0;
+			
+			void dayProcess(){
+				int* foodCoordinates = searchForFood();
+			}
 
 			// Methods for getting private members
 			int getPositionX() { return _xCoord; }

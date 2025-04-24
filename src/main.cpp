@@ -36,22 +36,20 @@ int main() {
 
     // Create each animal and populate the map (Each animal is placed randomly on the board)
     for (int i = 0; i < numHerbivores; i++){
-        int x_coord = rand() % 100;
-        int y_coord = rand() % 100;
+        int x_coord = rand() % mapWidth;
+        int y_coord = rand() % mapHeight;
+
+        //animalList.emplace_back(Animals::Herbivore(x_coord, y_coord));
+    }
+    
+    /*for (int i = 0; i < numCarnivores; i++){
+        int x_coord = rand() % mapWidth;
+        int y_coord = rand() % mapHeight;
 
         Animals::Herbivore animalToAdd = Animals::Herbivore(x_coord, y_coord);
 
         animalList.push_back(animalToAdd);
-    }
-
-    for (int i = 0; i < numHerbivores; i++){
-        int x_coord = rand() % 100;
-        int y_coord = rand() % 100;
-
-        Animals::Herbivore animalToAdd = Animals::Herbivore(x_coord, y_coord);
-
-        animalList.push_back(animalToAdd);
-    }
+    }*/
 
     // Run simulation
     while (runEcosystem){
@@ -59,14 +57,14 @@ int main() {
             animalList[i].dayProcess();
         }
 
-        while (userInput != "Y" && userInput != "N"){
+        while (userInput != "y" && userInput != "n"){
             std::cout << "Would you like to simulate another day? Y/N\n";
-            if (Utilities::takeYNInput() == 'n'){
+            userInput = Utilities::takeYNInput();
+            if (userInput == "n"){
                 std::cout << "Exiting...\n";
                 runEcosystem = false;
             }
         }
-
     }
 
     return 0;

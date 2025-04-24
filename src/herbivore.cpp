@@ -10,9 +10,5 @@ namespace Animals {
 				_canEatPlant = true;
 				_canEatAnimal = false;
 			}
-
-			void dayProcess(){
-
-			}
 	};
 }

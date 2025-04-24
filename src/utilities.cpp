@@ -12,7 +12,7 @@ namespace Utilities {
         return inputString;
     }
 
-    static char takeYNInput(){
+    static std::string takeYNInput(){
         bool ynInputed = true;
         std::string userInput;
 
@@ -26,7 +26,7 @@ namespace Utilities {
 
         } while (ynInputed == false);
 
-        return userInput[0];
+        return userInput;
     }
 
     static int takeIntInput() {
