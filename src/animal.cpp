@@ -18,9 +18,21 @@ namespace Animals {
 			int _health = 0;
 			int _speed = 0;
 
-			void searchForFood(int* coordinates) {
+			void searchForFood(std::vector<Animal> &animalList, std::vector<std::vector<int>> &plantMap, int (&foodCoordinates)[2], int depth, int x, int y) {
 
-				//coordinates = {0, 0};
+				if (plantMap[y][x] == 0){
+					// Check if there is food in the square
+					foodCoordinates[0] = x;
+					foodCoordinates[1] = y;
+				}
+				else{
+					// Check the squares around the square
+					searchForFood(animalList, plantMap, foodCoordinates, depth-1, x - 1, y - 1);
+					searchForFood(animalList, plantMap, foodCoordinates, depth-1, x + 1, y - 1);
+					searchForFood(animalList, plantMap, foodCoordinates, depth-1, x - 1, y + 1);
+					searchForFood(animalList, plantMap, foodCoordinates, depth-1, x + 1, y + 1);
+				}
+
 			}
 
 		public:
@@ -31,13 +43,24 @@ namespace Animals {
 				_health = ALLOWEDHUNGRYDAYS;
 			}
 			
-			void dayProcess(){
+			void dayProcess(std::vector<Animal> &animalList, std::vector<std::vector<int>> &plantMap){
 				int foodCoordinates[] = { -1, -1 };
-				searchForFood(foodCoordinates);
+				searchForFood(animalList, plantMap, foodCoordinates, _sightRange, _xCoord, _yCoord);
 
 				// Checks if the searchForFood found a food (negative coordinate is only returned if food is not found)
 				while (foodCoordinates[0] == -1){
-					
+					// Randomly moves then checks for food again
+					switch (rand() % 4){
+						case 0:
+							_xCoord -= 1;
+						case 1:
+							_xCoord += 1;
+						case 2:
+							_yCoord -= 1;
+						case 3:
+							_yCoord += 1;
+					}
+					searchForFood(animalList, plantMap, foodCoordinates,  _sightRange, _xCoord, _yCoord);
 				}
 				// Use all remaining movement points to try to reach the food
 
