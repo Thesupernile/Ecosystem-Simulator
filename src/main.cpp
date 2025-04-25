@@ -51,14 +51,30 @@ namespace Ecosystem {
         std::cout << "\n";
     }
 
-    static void reportEcoInformation(std::vector<Animals::Animal> animalsList){
+    static void reportEcoInformation(std::vector<Animals::Animal> &animalsList, std::vector<std::vector<int>> &plantMap){
         int numCarnivores = 0;
         int numHerbivores = 0;
         int numPlants = 0;
         int numStarvingAnimals = 0;
 
+        // Adds up all the plants
+        for (int row = 0; row < plantMap.size(); row++){
+            for (int col = 0; col < plantMap[row].size(); col++){
+                numPlants += plantMap[row][col];
+            }
+        }
+
+        // Adds up all the animals
         for (int i = 0; i < animalsList.size(); i++){
-            
+            if (animalsList[i].isHerbivore()){
+                numHerbivores++;
+            }
+            else if (animalsList[i].isCarnivore()){
+                numCarnivores++;
+            }
+            if (animalsList[i].getHealth() <= 1){
+                numStarvingAnimals++;
+            }
         }
 
         std::cout << "Ecosystem Information:\n\n";
@@ -97,13 +113,18 @@ int main() {
     while (runEcosystem){
         for (int i = 0; i < animalList.size(); i++){
             animalList[i].dayProcess(animalList, plantMap);
+            // If an animal is dead, we can remove it from existance
+            if (animalList[i].getHealth() == 0){
+                //animalList.erase(std::next(animalList.begin(), i));
+            }
         }
 
-        Ecosystem::reportEcoInformation(animalList);
+        Ecosystem::reportEcoInformation(animalList, plantMap);
 
         while (userInput != "y" && userInput != "n"){
             std::cout << "Would you like to simulate another day? Y/N\n";
             userInput = Utilities::takeYNInput();
+            std::cout << userInput;
             if (userInput == "n"){
                 std::cout << "Exiting...\n";
                 runEcosystem = false;
