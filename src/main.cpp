@@ -54,6 +54,7 @@ namespace Ecosystem {
     static void reportEcoInformation(std::vector<Animals::Animal> &animalsList, std::vector<std::vector<int>> &plantMap){
         int numCarnivores = 0;
         int numHerbivores = 0;
+        int numAliveAnimals = 0;
         int numPlants = 0;
         int numStarvingAnimals = 0;
 
@@ -66,10 +67,13 @@ namespace Ecosystem {
 
         // Adds up all the animals
         for (size_t i = 0; i < animalsList.size(); i++){
-            if (animalsList[i].isHerbivore()){
+            if (animalsList[i].isAlive()){
+                numAliveAnimals++;
+            }
+            if (animalsList[i].isHerbivore() && animalsList[i].isAlive()){
                 numHerbivores++;
             }
-            else if (animalsList[i].isCarnivore()){
+            else if (animalsList[i].isCarnivore() && animalsList[i].isAlive()){
                 numCarnivores++;
             }
             if (animalsList[i].getHealth() <= 1){
@@ -79,7 +83,7 @@ namespace Ecosystem {
 
         std::cout << "Ecosystem Information:\n\n";
         std::cout << "There are " << numPlants << " plants in the ecosystem.\n";
-        std::cout << "There are " << animalsList.size() << " animals in the ecosystem.\n";
+        std::cout << "There are " << numAliveAnimals << " animals in the ecosystem.\n";
         std::cout << "Of these, " << numHerbivores << " are herviores and " << numCarnivores << " are carnivores.\n";
         std::cout << numStarvingAnimals << " animals didn't find food today.\n";
     }
@@ -116,7 +120,7 @@ int main() {
             animalList[i].dayProcess(animalList, plantMap);
             // If an animal is dead, we can remove it from existance
             if (animalList[i].getHealth() == 0){
-                //animalList.erase(std::next(animalList.begin(), i));
+                animalList[i].setIsAlive(false);
             }
             if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
                 animalList.emplace_back(Animals::Herbivore(animalList[i].getPositionX(), animalList[i].getPositionY()));

@@ -10,6 +10,7 @@ namespace Animals {
 			bool _canEatPlant = false;
 			bool _canEatAnimal = false;
 			bool _ateLastDay = false;
+			bool _isAlive = true;
 			int _xCoord = 0;
 			int _yCoord = 0;
 			int _health = 0;
@@ -44,7 +45,7 @@ namespace Animals {
 
 			void searchForAnimalFood(std::vector<Animal> &animalList, int (&foodCoordinates)[3], int depth, int x, int y){
 				// Future feature: Carnivores can eat other carnivores if they are below half hunger
-				for (auto animal : animalList){
+				for (auto &animal : animalList){
 					if (animal.isHerbivore()){
 						int xDistance;
 						int yDistance;
@@ -185,6 +186,7 @@ namespace Animals {
 			// Methods for getting private members
 			bool isHerbivore() { return _canEatPlant; }
 			bool isCarnivore() { return _canEatAnimal; }
+			bool isAlive() { return _isAlive; }
 			bool AteToday() { return _ateLastDay; }
 			int getHealth() { return _health; }
 			int getFedDays() { return _wellFedDays; }
@@ -197,5 +199,6 @@ namespace Animals {
 			void setPositionX(int newPosX) { _xCoord = newPosX; }
 			void setPositionY(int newPosY) { _yCoord = newPosY; }
 			void setWellFedDays(int newDays) { _wellFedDays = newDays; }
+			void setIsAlive(bool newIsAlive) { _isAlive = newIsAlive; }
 	};
 }
