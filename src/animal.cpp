@@ -7,13 +7,13 @@ namespace Animals {
 			int _foodRequired = 1;
 			int _sightRange = 5;
 			int _wellFedDays = 0;
+			int _hungryDays = 0;
 			bool _canEatPlant = false;
 			bool _canEatAnimal = false;
 			bool _ateLastDay = false;
 			bool _isAlive = true;
 			int _xCoord = 0;
 			int _yCoord = 0;
-			int _health = 0;
 			int _speed = 5;
 
 			void searchForPlantFood(std::vector<std::vector<int>> &plantMap, int (&foodCoordinates)[3], int depth, int x, int y) {
@@ -69,7 +69,6 @@ namespace Animals {
 			Animal(int xCoord, int yCoord, bool canEatPlants, bool canEatAnimal) {
 				_xCoord = xCoord;
 				_yCoord = yCoord;
-				_health = ALLOWEDHUNGRYDAYS;
 				_canEatPlant = canEatPlants;
 				_canEatAnimal = canEatAnimal;
 			}
@@ -93,7 +92,7 @@ namespace Animals {
 				// The first two indexes in coordinates are the positon (x, y) and the third is the distance between this animal and the food
 				int foodCoordinates[] = { -1, -1, _sightRange + 1 };
 				int movementPoints = _speed;
-				bool _ateLastDay = false;
+				_ateLastDay = false;
 				if (_canEatPlant){
 					searchForPlantFood(plantMap, foodCoordinates, _sightRange, _xCoord, _yCoord);
 				}
@@ -166,21 +165,21 @@ namespace Animals {
 						plantMap[_yCoord][_xCoord] -= 1;
 						_ateLastDay = true;
 						_wellFedDays += 1;
-						_health = ALLOWEDHUNGRYDAYS;
+						_hungryDays = 0;
 					}
 					else if (_canEatAnimal){
 						for (size_t i = 0; i < animalList.size(); i++){
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
 								_ateLastDay = true;
 								_wellFedDays += 1;
-								_health = ALLOWEDHUNGRYDAYS;
+								_hungryDays = 0;
 								animalList[i].setIsAlive(false);
 							}
 						}
 					}
 				}
 				if (!(_ateLastDay)){
-					_health--;
+					_hungryDays++;
 					_wellFedDays = 0;
 				}
 
@@ -192,8 +191,8 @@ namespace Animals {
 			bool isHerbivore() { return _canEatPlant; }
 			bool isCarnivore() { return _canEatAnimal; }
 			bool isAlive() { return _isAlive; }
-			bool AteToday() { return _ateLastDay; }
-			int getHealth() { return _health; }
+			bool ateToday() { return _ateLastDay; }
+			int getHungryDays() { return _hungryDays; }
 			int getFedDays() { return _wellFedDays; }
 
 

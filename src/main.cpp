@@ -31,39 +31,45 @@ namespace Ecosystem {
                         bool newPlantMade = false;
 
                         while (!newPlantMade){
-                            switch (rand() % 4){
+                            switch (rand() % 5){
                                 case 0:
                                     if (col-1 >= 0){
                                         if (plantMap[row][col-1] < maxPlantsPerTile){
                                             plantMap[row][col-1] += 1;
+                                            newPlantMade = true;
                                         }
-                                        newPlantMade = true;
                                     }
                                     break;
                                 case 1:
                                     if (col+1 < static_cast<int>(plantMap[0].size())){
                                         if (plantMap[row][col+1] < maxPlantsPerTile){
                                             plantMap[row][col+1] += 1;
+                                            newPlantMade = true;
                                         }
-                                        newPlantMade = true;
                                     }
                                     break;
                                 case 2:
                                     if (row - 1 >= 0){
                                         if (plantMap[row-1][col] < maxPlantsPerTile){
                                             plantMap[row-1][col] += 1;
+                                            newPlantMade = true;
                                         }
-                                        newPlantMade = true;
                                     }
                                     break;
-                                default:
+                                case 3:
                                     if (row + 1 < static_cast<int>(plantMap.size())){
                                         if (plantMap[row+1][col] < maxPlantsPerTile){
                                             plantMap[row+1][col] += 1;
+                                            newPlantMade = true;
                                         }
-                                        newPlantMade = true;
                                     }
                                     break;
+                                default:
+                                    if (plantMap[row][col] < maxPlantsPerTile){
+                                        plantMap[row][col] += 1;
+                                        newPlantMade = true;
+                                    }
+                                    break; 
                             }
                         }
                     }
@@ -91,7 +97,7 @@ namespace Ecosystem {
         int numHerbivores = 0;
         int numAliveAnimals = 0;
         int numPlants = 0;
-        int numStarvingAnimals = 0;
+        int numAnimalsNotEaten = 0;
 
         // Adds up all the plants
         for (size_t row = 0; row < plantMap.size(); row++){
@@ -111,18 +117,17 @@ namespace Ecosystem {
             else if (animalsList[i].isCarnivore() && animalsList[i].isAlive()){
                 numCarnivores++;
             }
-            if (animalsList[i].getHealth() <= 1 && animalsList[i].isAlive()){
-                numStarvingAnimals++;
+            if (!(animalsList[i].ateToday()) && animalsList[i].isAlive()){
+                numAnimalsNotEaten++;
             }
         }
 
-        std::cout << "Ecosystem Information:\n\n";
+        std::cout << "\nEcosystem Information:\n\n";
         std::cout << "There are " << numPlants << " plants in the ecosystem.\n";
         std::cout << "There are " << numAliveAnimals << " animals in the ecosystem.\n";
         std::cout << "Of these, " << numHerbivores << " are herviores and " << numCarnivores << " are carnivores.\n";
-        std::cout << numStarvingAnimals << " animals didn't find food today.\n";
+        std::cout << numAnimalsNotEaten << " animals didn't find food today.\n";
     }
-
 }
 
 int main() {
@@ -131,9 +136,10 @@ int main() {
     int mapHeight = 100;
     int numPlants = 4000;
     double plantGrothRate = 0.8;
-    int numHerbivores = 100;
+    int numHerbivores = 1;
     int numCarnivores = 10;
     int wellFedDaysToReproduce = 2;
+    int daysBeforeDeath = 2;
     int maxPlantsPerTile = 5;
 
     bool runEcosystem = true;
@@ -157,7 +163,7 @@ int main() {
             if (animalList[i].isAlive()){
                 animalList[i].dayProcess(animalList, plantMap);
                 // If an animal is dead, we can remove it from existance
-                if (animalList[i].getHealth() == 0){
+                if (animalList[i].getHungryDays() >= daysBeforeDeath){
                     animalList[i].setIsAlive(false);
                 }
                 if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
@@ -174,7 +180,6 @@ int main() {
         while (userInput != "y" && userInput != "n"){
             std::cout << "Would you like to simulate another day? Y/N\n";
             userInput = Utilities::takeYNInput();
-            std::cout << userInput;
             if (userInput == "n"){
                 std::cout << "Exiting...\n";
                 runEcosystem = false;
