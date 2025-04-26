@@ -9,32 +9,59 @@ namespace Ecosystem {
     
             animalList.emplace_back(Animals::Herbivore(x_coord, y_coord));
         }
-        
-        /*for (int i = 0; i < numCarnivores; i++){
-            int x_coord = rand() % mapWidth;
-            int y_coord = rand() % mapHeight;
-    
-            Animals::Herbivore animalToAdd = Animals::Herbivore(x_coord, y_coord);
-    
-            animalList.push_back(animalToAdd);
-        }*/
     }
 
     static void populatePlants(std::vector<std::vector<int>> &plantMap, int numPlants, const int mapHeight, const int mapWidth) {
-        /* EXAMPLE PLANT MAP
-            0104
-            0030
-            2000
-            0060
-        */
-
         for (int i = 0; i < numPlants; i++){
             int plantX = rand() % mapWidth;
             int plantY = rand() % mapHeight;
 
             plantMap[plantY][plantX] += 1;
         }
+    }
 
+    static void plantDayProcess(std::vector<std::vector<int>> &plantMap){
+        for (int row = 0; row < static_cast<int>(plantMap.size()); row++){
+            for (int col = 0; col < static_cast<int>(plantMap[row].size()); col++){
+                // 80% chance of a plant duplicating
+                int numPlants = plantMap[row][col];
+                
+                for (int i = 0; i < numPlants; i++){
+                    if (rand() % 10 > 8){
+                        bool newPlantMade = false;
+
+                        while (!newPlantMade){
+                            switch (rand() % 4){
+                                case 0:
+                                    if (col-1 >= 0){
+                                        plantMap[row][col-1] += 1;
+                                        newPlantMade = true;
+                                    }
+                                    break;
+                                case 1:
+                                    if (col+1 < static_cast<int>(plantMap[0].size())){
+                                        plantMap[row][col+1] += 1;
+                                        newPlantMade = true;
+                                    }
+                                    break;
+                                case 2:
+                                    if (row - 1 >= 0){
+                                        plantMap[row-1][col] += 1;
+                                        newPlantMade = true;
+                                    }
+                                    break;
+                                default:
+                                    if (row + 1 < static_cast<int>(plantMap.size())){
+                                        plantMap[row+1][col] += 1;
+                                        newPlantMade = true;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     static void instructions() {
@@ -76,7 +103,7 @@ namespace Ecosystem {
             else if (animalsList[i].isCarnivore() && animalsList[i].isAlive()){
                 numCarnivores++;
             }
-            if (animalsList[i].getHealth() <= 1){
+            if (animalsList[i].getHealth() <= 1 && animalsList[i].isAlive()){
                 numStarvingAnimals++;
             }
         }
@@ -128,6 +155,7 @@ int main() {
             }
         }
 
+        Ecosystem::plantDayProcess(plantMap);
         Ecosystem::reportEcoInformation(animalList, plantMap);
 
         userInput = "";

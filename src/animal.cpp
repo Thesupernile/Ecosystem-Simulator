@@ -170,7 +170,7 @@ namespace Animals {
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
 								_ateLastDay = true;
 								_wellFedDays += 1;
-								//animalList.erase(std::next(animalList.begin(), i));
+								animalList[i].setIsAlive(false);
 							}
 						}
 					}
