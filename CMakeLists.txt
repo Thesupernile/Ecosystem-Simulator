@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED False)
 
 project(EcoSimulator)
 include_directories(EcoSimulator src/headers)
-add_executable(EcoSimulator src/main.cpp src/animal.cpp src/herbivore.cpp src/carnivore.cpp src/utilities.cpp)
+add_executable(EcoSimulator src/main.cpp src/animal.cpp src/utilities.cpp)

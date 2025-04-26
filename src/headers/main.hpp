@@ -2,5 +2,5 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include "herbivore.cpp"
+#include "animal.cpp"
 #include "utilities.cpp"

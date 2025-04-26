@@ -334,8 +334,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\main.cpp" />
     <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\animal.cpp" />
-    <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\herbivore.cpp" />
-    <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\carnivore.cpp" />
     <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\utilities.cpp" />
   </ItemGroup>
   <ItemGroup />

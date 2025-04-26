@@ -7,7 +7,7 @@ namespace Ecosystem {
             int x_coord = rand() % mapWidth;
             int y_coord = rand() % mapHeight;
     
-            animalList.emplace_back(Animals::Herbivore(x_coord, y_coord));
+            animalList.emplace_back(Animals::Animal(x_coord, y_coord, true, false));
         }
     }
 
@@ -20,7 +20,7 @@ namespace Ecosystem {
         }
     }
 
-    static void plantDayProcess(std::vector<std::vector<int>> &plantMap){
+    static void plantDayProcess(std::vector<std::vector<int>> &plantMap, int maxPlantsPerTile){
         for (int row = 0; row < static_cast<int>(plantMap.size()); row++){
             for (int col = 0; col < static_cast<int>(plantMap[row].size()); col++){
                 // 80% chance of a plant duplicating
@@ -34,25 +34,33 @@ namespace Ecosystem {
                             switch (rand() % 4){
                                 case 0:
                                     if (col-1 >= 0){
-                                        plantMap[row][col-1] += 1;
+                                        if (plantMap[row][col-1] < maxPlantsPerTile){
+                                            plantMap[row][col-1] += 1;
+                                        }
                                         newPlantMade = true;
                                     }
                                     break;
                                 case 1:
                                     if (col+1 < static_cast<int>(plantMap[0].size())){
-                                        plantMap[row][col+1] += 1;
+                                        if (plantMap[row][col+1] < maxPlantsPerTile){
+                                            plantMap[row][col+1] += 1;
+                                        }
                                         newPlantMade = true;
                                     }
                                     break;
                                 case 2:
                                     if (row - 1 >= 0){
-                                        plantMap[row-1][col] += 1;
+                                        if (plantMap[row-1][col] < maxPlantsPerTile){
+                                            plantMap[row-1][col] += 1;
+                                        }
                                         newPlantMade = true;
                                     }
                                     break;
                                 default:
                                     if (row + 1 < static_cast<int>(plantMap.size())){
-                                        plantMap[row+1][col] += 1;
+                                        if (plantMap[row+1][col] < maxPlantsPerTile){
+                                            plantMap[row+1][col] += 1;
+                                        }
                                         newPlantMade = true;
                                     }
                                     break;
@@ -126,6 +134,8 @@ int main() {
     int numHerbivores = 100;
     int numCarnivores = 10;
     int wellFedDaysToReproduce = 2;
+    int maxPlantsPerTile = 5;
+
     bool runEcosystem = true;
     std::string userInput = "";
 
@@ -144,18 +154,20 @@ int main() {
     // Run simulation
     while (runEcosystem){
         for (size_t i = 0; i < animalList.size(); i++){
-            animalList[i].dayProcess(animalList, plantMap);
-            // If an animal is dead, we can remove it from existance
-            if (animalList[i].getHealth() == 0){
-                animalList[i].setIsAlive(false);
-            }
-            if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
-                animalList.emplace_back(Animals::Herbivore(animalList[i].getPositionX(), animalList[i].getPositionY()));
-                animalList[i].setWellFedDays(0);
+            if (animalList[i].isAlive()){
+                animalList[i].dayProcess(animalList, plantMap);
+                // If an animal is dead, we can remove it from existance
+                if (animalList[i].getHealth() == 0){
+                    animalList[i].setIsAlive(false);
+                }
+                if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
+                    animalList.emplace_back(Animals::Animal(animalList[i].getPositionX(), animalList[i].getPositionY(), animalList[i].isHerbivore(), animalList[i].isCarnivore()));
+                    animalList[i].setWellFedDays(0);
+                }
             }
         }
 
-        Ecosystem::plantDayProcess(plantMap);
+        Ecosystem::plantDayProcess(plantMap, maxPlantsPerTile);
         Ecosystem::reportEcoInformation(animalList, plantMap);
 
         userInput = "";

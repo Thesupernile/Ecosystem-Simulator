@@ -66,10 +66,12 @@ namespace Animals {
 			}
 
 		public:
-			Animal(int xCoord, int yCoord) {
+			Animal(int xCoord, int yCoord, bool canEatPlants, bool canEatAnimal) {
 				_xCoord = xCoord;
 				_yCoord = yCoord;
 				_health = ALLOWEDHUNGRYDAYS;
+				_canEatPlant = canEatPlants;
+				_canEatAnimal = canEatAnimal;
 			}
 
 			/* Taken out since non functional
@@ -164,12 +166,14 @@ namespace Animals {
 						plantMap[_yCoord][_xCoord] -= 1;
 						_ateLastDay = true;
 						_wellFedDays += 1;
+						_health = ALLOWEDHUNGRYDAYS;
 					}
 					else if (_canEatAnimal){
 						for (size_t i = 0; i < animalList.size(); i++){
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
 								_ateLastDay = true;
 								_wellFedDays += 1;
+								_health = ALLOWEDHUNGRYDAYS;
 								animalList[i].setIsAlive(false);
 							}
 						}
@@ -177,6 +181,7 @@ namespace Animals {
 				}
 				if (!(_ateLastDay)){
 					_health--;
+					_wellFedDays = 0;
 				}
 
 				// Delete the food coordinates array

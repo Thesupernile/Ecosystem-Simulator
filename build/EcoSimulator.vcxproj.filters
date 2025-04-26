@@ -7,12 +7,6 @@
     <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\animal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\herbivore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\carnivore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Programming\Personal\C++\Ecosystem Simulator\src\utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
