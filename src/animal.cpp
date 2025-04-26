@@ -3,7 +3,6 @@
 namespace Animals {
 	class Animal {
 		protected:
-			const int ALLOWEDHUNGRYDAYS = 2;
 			int _foodRequired = 1;
 			int _sightRange = 5;
 			int _wellFedDays = 0;

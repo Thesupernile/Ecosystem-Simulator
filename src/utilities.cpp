@@ -32,9 +32,10 @@ namespace Utilities {
     static int takeIntInput() {
         bool intInputed = true;
         std::string userInput;
-
+        
         do {
             std::cin >> userInput;
+            intInputed = true;
             for (char c : userInput) {
                 if (c < 48 || c > 58) {
                     intInputed = false;
@@ -44,5 +45,29 @@ namespace Utilities {
         } while (intInputed == false);
 
         return std::stoi(userInput);
+    }
+
+    static double takeDoubleInput() {
+        bool doubleInputted = true;
+        bool pointFound = false;
+        std::string userInput;
+
+        do {
+            std::cin >> userInput;
+            doubleInputted = true;
+
+            for (char c : userInput) {
+                if (c == '.'){
+                    if (!pointFound) { pointFound = true; }
+                    else { doubleInputted = false; }
+                }
+                if (c < 48 || c > 58) {
+                    doubleInputted = false;
+                    std::cout << "Please enter a valid decimal number (eg. 0.89 or 0.1)\n";
+                }
+            }
+        } while (doubleInputted == false);
+
+        return std::stod(userInput);
     }
 }

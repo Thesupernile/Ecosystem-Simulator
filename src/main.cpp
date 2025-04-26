@@ -20,14 +20,14 @@ namespace Ecosystem {
         }
     }
 
-    static void plantDayProcess(std::vector<std::vector<int>> &plantMap, int maxPlantsPerTile){
+    static void plantDayProcess(std::vector<std::vector<int>> &plantMap, int maxPlantsPerTile, double plantGrowthChance){
         for (int row = 0; row < static_cast<int>(plantMap.size()); row++){
             for (int col = 0; col < static_cast<int>(plantMap[row].size()); col++){
-                // 80% chance of a plant duplicating
                 int numPlants = plantMap[row][col];
                 
                 for (int i = 0; i < numPlants; i++){
-                    if (rand() % 10 > 8){
+                    // Random chance of duplication
+                    if ((double)((rand() % 1000) / 1000) > plantGrowthChance){
                         bool newPlantMade = false;
 
                         while (!newPlantMade){
@@ -135,11 +135,11 @@ int main() {
     int mapWidth = 100;
     int mapHeight = 100;
     int numPlants = 4000;
-    double plantGrothRate = 0.8;
-    int numHerbivores = 1;
+    double plantGrowthRate = 0.8;
+    int numHerbivores = 100;
     int numCarnivores = 10;
     int wellFedDaysToReproduce = 2;
-    int daysBeforeDeath = 2;
+    int hungryDaysBeforeDeath = 2;
     int maxPlantsPerTile = 5;
 
     bool runEcosystem = true;
@@ -147,6 +147,141 @@ int main() {
 
     // Ecosystem Setup By User
     Ecosystem::instructions();
+    std::cout << "Would you like to alter the ecosystem parameters?\n";
+    userInput = Utilities::takeYNInput();
+    std::cout << "\n";
+    if (userInput == "y"){
+        bool setupComplete = false;
+
+        do{
+            std::cout << "\nEcosystem Setup Window: \n";
+            std::cout << "\nMap\n";
+            std::cout << "1) Map Width: " << mapWidth << "\n";
+            std::cout << "2) Map Height: " << mapHeight << "\n";
+
+            std::cout << "\nPlants\n";
+            std::cout << "3) Initial Plants: " << numPlants << "\n";
+            std::cout << "4) Plant Growth Rate: " << plantGrowthRate << "\n";
+            std::cout << "5) Maximum number of plants per tile: " << maxPlantsPerTile << "\n";
+
+            std::cout << "\nAnimals\n";
+            std::cout << "6) Intital Herbivores: " << numHerbivores << "\n";
+            std::cout << "7) Initial Carnivores: " << numCarnivores << "\n";
+            std::cout << "8) Number of consecutive fed days before an animal reproduces: " << wellFedDaysToReproduce << "\n";
+            std::cout << "9) Number of consecutive days without food before an animal dies: " << hungryDaysBeforeDeath << "\n";
+
+            std::cout << "\n10) Exit this menu" << "\n";
+
+            std::cout << "\nEnter the number of the option you would like to choose: \n";
+            int optionChosen = Utilities::takeIntInput();
+            std::cout << "\n";
+
+            // Creating variables for new inputted values (allows program to ask for confirmation before large values are inputted)
+            // Only asks for values that substantially affect performance
+            int newMapWidth;
+            int newMapHeight;
+            int newNumPlants;
+            int newNumHerbivores;
+            int newNumCarnivores;
+
+            switch (optionChosen){
+                case 1:
+                    std::cout << "Enter new value for map width: ";
+                    newMapWidth = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    if (newMapWidth >= 200){
+                        std::cout << "WARNING! Large map size may take longer to process. Would you like to proceed anyway?\n";
+                        userInput = Utilities::takeYNInput();
+                        if (userInput == "y"){
+                            mapWidth = newMapWidth;
+                        }
+                    }
+                    else { mapWidth = newMapWidth; }
+                    break;
+                case 2:
+                    std::cout << "Enter new value for map height: ";
+                    newMapHeight = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    if (newMapHeight >= 200){
+                        std::cout << "WARNING! Large map size may take longer to process. Would you like to proceed anyway?\n";
+                        userInput = Utilities::takeYNInput();
+                        if (userInput == "y"){
+                            mapHeight = newMapHeight;
+                        }
+                    }
+                    else { mapHeight = newMapHeight; }
+                    break;
+                case 3:
+                    std::cout << "Enter new value for initial plants: ";
+                    newNumPlants = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    if (newNumPlants >= 20000){
+                        std::cout << "WARNING! Large numbers of plants may take a long time to process. Would you like to proceed anyway?\n";
+                        userInput = Utilities::takeYNInput();
+                        if (userInput == "y"){
+                            numPlants = newNumPlants;
+                        }
+                    }
+                    else { numPlants = newNumPlants; }
+                    break;
+                case 4:
+                    std::cout << "Enter new value for the maximum number of plants per tile: ";
+                    plantGrowthRate = Utilities::takeDoubleInput();
+                    std::cout << "\n";
+                    break;
+                case 5:
+                    std::cout << "Enter new value for the maximum number of plants per tile: ";
+                    maxPlantsPerTile = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    break;
+                case 6:
+                    std::cout << "Enter new value for initial herbivores: ";
+                    newNumHerbivores = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    if (newNumHerbivores >= 20000){
+                        std::cout << "WARNING! Large numbers of animals may take a long time to process. Would you like to proceed anyway?\n";
+                        userInput = Utilities::takeYNInput();
+                        if (userInput == "y"){
+                            numHerbivores = newNumHerbivores;
+                        }
+                    }
+                    else { numHerbivores = newNumHerbivores; }
+                    break;
+                case 7:
+                    std::cout << "Enter new value for initial carnivores: ";
+                    newNumCarnivores = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    if (newNumCarnivores >= 20000){
+                        std::cout << "WARNING! Large numbers of animals may take a long time to process. Would you like to proceed anyway?\n";
+                        userInput = Utilities::takeYNInput();
+                        if (userInput == "y"){
+                            numCarnivores = newNumCarnivores;
+                        }
+                    }
+                    else { numCarnivores = newNumCarnivores; }
+                    break;
+                case 8:
+                    std::cout << "Enter new value for number of fed days required to reproduce: ";
+                    wellFedDaysToReproduce = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    break;
+                case 9:
+                    std::cout << "Enter new value for number of days without food before death: ";
+                    hungryDaysBeforeDeath = Utilities::takeIntInput();
+                    std::cout << "\n";
+                    break;
+                case 10:
+                    setupComplete = true;
+                    std::cout << "\n";
+                    break;
+                default:
+                    std::cout << "Unknown Input\n\n";
+                    break;
+            }
+
+        } while (setupComplete == false);
+
+    }
 
     // Simulation
     std::vector<Animals::Animal> animalList;
@@ -163,7 +298,7 @@ int main() {
             if (animalList[i].isAlive()){
                 animalList[i].dayProcess(animalList, plantMap);
                 // If an animal is dead, we can remove it from existance
-                if (animalList[i].getHungryDays() >= daysBeforeDeath){
+                if (animalList[i].getHungryDays() >= hungryDaysBeforeDeath){
                     animalList[i].setIsAlive(false);
                 }
                 if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
@@ -173,17 +308,15 @@ int main() {
             }
         }
 
-        Ecosystem::plantDayProcess(plantMap, maxPlantsPerTile);
+        Ecosystem::plantDayProcess(plantMap, maxPlantsPerTile, plantGrowthRate);
         Ecosystem::reportEcoInformation(animalList, plantMap);
 
         userInput = "";
-        while (userInput != "y" && userInput != "n"){
-            std::cout << "Would you like to simulate another day? Y/N\n";
-            userInput = Utilities::takeYNInput();
-            if (userInput == "n"){
-                std::cout << "Exiting...\n";
-                runEcosystem = false;
-            }
+        std::cout << "Would you like to simulate another day? Y/N\n";
+        userInput = Utilities::takeYNInput();
+        if (userInput == "n"){
+            std::cout << "Exiting...\n";
+            runEcosystem = false;
         }
     }
 
