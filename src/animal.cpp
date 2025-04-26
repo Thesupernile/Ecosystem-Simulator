@@ -4,11 +4,9 @@ namespace Animals {
 	class Animal {
 		protected:
 			const int ALLOWEDHUNGRYDAYS = 2;
-			const int WELLFEDDAYSTOREPRODUCE = 2;
-
 			int _foodRequired = 1;
 			int _sightRange = 5;
-			int _wellFedDays = 1;
+			int _wellFedDays = 0;
 			bool _canEatPlant = false;
 			bool _canEatAnimal = false;
 			bool _ateLastDay = false;
@@ -19,19 +17,28 @@ namespace Animals {
 
 			void searchForPlantFood(std::vector<std::vector<int>> &plantMap, int (&foodCoordinates)[3], int depth, int x, int y) {
 
-				if (plantMap[y][x] == 0 && (_sightRange - depth) < foodCoordinates[3]){
+				if (plantMap[y][x] != 0 && (_sightRange - depth) < foodCoordinates[2]){
 					// Check if there is food in the square
 					foodCoordinates[0] = x;
 					foodCoordinates[1] = y;
+					foodCoordinates[2] = _sightRange - depth; /*This line also has the error*/
 				}
-				else{
+				else if (depth > 0){
 					// Increase distance
-					foodCoordinates[3] += 1;
 					// Check the squares around the square
-					searchForPlantFood(plantMap, foodCoordinates, depth-1, x - 1, y - 1);
-					searchForPlantFood(plantMap, foodCoordinates, depth-1, x + 1, y - 1);
-					searchForPlantFood(plantMap, foodCoordinates, depth-1, x - 1, y + 1);
-					searchForPlantFood(plantMap, foodCoordinates, depth-1, x + 1, y + 1);
+					// Here there needs to be an extra part to prevent us looking at squares we've already checked
+					if (x-1 >= 0 && y-1 >= 0){
+						searchForPlantFood(plantMap, foodCoordinates, depth-1, x - 1, y - 1);
+					}
+					if (x+1 < static_cast<int>(plantMap[0].size()) && y-1 >= 0){
+						searchForPlantFood(plantMap, foodCoordinates, depth-1, x + 1, y - 1);
+					}
+					if (x-1 >= 0 && y+1 < static_cast<int>(plantMap.size())){
+						searchForPlantFood(plantMap, foodCoordinates, depth-1, x - 1, y + 1);
+					}
+					if(x+1 < static_cast<int>(plantMap[0].size()) && y+1 < static_cast<int>(plantMap.size())){
+						searchForPlantFood(plantMap, foodCoordinates, depth-1, x + 1, y + 1);
+					}
 				}
 			}
 
@@ -63,11 +70,27 @@ namespace Animals {
 				_yCoord = yCoord;
 				_health = ALLOWEDHUNGRYDAYS;
 			}
+
+			/* Taken out since non functional
+			~Animal() {
+				delete &ALLOWEDHUNGRYDAYS;
+				delete &_foodRequired;
+				delete &_sightRange;
+				delete &_wellFedDays;
+				delete &_canEatPlant;
+				delete &_canEatAnimal;
+				delete &_ateLastDay;
+				delete &_xCoord;
+				delete &_yCoord;
+				delete &_health;
+				delete &_speed;
+			}*/
 			
 			void dayProcess(std::vector<Animal> &animalList, std::vector<std::vector<int>> &plantMap){
 				// The first two indexes in coordinates are the positon (x, y) and the third is the distance between this animal and the food
 				int foodCoordinates[] = { -1, -1, _sightRange + 1 };
 				int movementPoints = _speed;
+				bool _ateLastDay = false;
 				if (_canEatPlant){
 					searchForPlantFood(plantMap, foodCoordinates, _sightRange, _xCoord, _yCoord);
 				}
@@ -78,19 +101,39 @@ namespace Animals {
 				// Checks if the searchForFood found a food (negative coordinate is only returned if food is not found)
 				while (foodCoordinates[0] == -1 && movementPoints > 0){
 					// Randomly moves then checks for food again
-					switch (rand() % 4){
-						case 0:
-							_xCoord -= 1;
-						case 1:
-							_xCoord += 1;
-						case 2:
-							_yCoord -= 1;
-						case 3:
-							_yCoord += 1;
+					bool hasMoved = false;
+					while (!hasMoved){
+						switch (rand() % 4){
+							case 0:
+								if (_xCoord-1 >= 0){
+									_xCoord -= 1;
+									hasMoved = true;
+								}
+								break;
+							case 1:
+								if (_xCoord+1 < static_cast<int>(plantMap[0].size())){
+									_xCoord += 1;
+									hasMoved = true;
+								}
+								break;
+							case 2:
+								if (_yCoord - 1 >= 0){
+									_yCoord -= 1;
+									hasMoved = true;
+								}
+								break;
+							default:
+								if (_yCoord + 1 < static_cast<int>(plantMap.size())){
+									_yCoord += 1;
+									hasMoved = true;
+								}
+								break;
+						}
 					}
 					movementPoints--;
+					//std::cout << "Position updated:\nX: " << _xCoord << "\nY: " << _yCoord;
 
-					if (_canEatAnimal){
+					if (_canEatPlant){
 						searchForPlantFood(plantMap, foodCoordinates,  _sightRange, _xCoord, _yCoord);
 					}
 					else{
@@ -98,19 +141,19 @@ namespace Animals {
 					}
 				}
 				// Use all remaining movement points to try to reach the food
-				while (foodCoordinates[0] != _xCoord && foodCoordinates[1] != _yCoord && movementPoints > 0){
+				while ((foodCoordinates[0] != _xCoord || foodCoordinates[1] != _yCoord) && movementPoints > 0){
 					// Moves first horizontally to the food, then up to it
 					if (foodCoordinates[0] > _xCoord){
-						_xCoord -= 1;
-					}
-					else if (foodCoordinates[0] < _xCoord){
 						_xCoord += 1;
 					}
-					else if (foodCoordinates[1] > _yCoord){
-						_yCoord -= 1;
+					else if (foodCoordinates[0] < _xCoord){
+						_xCoord -= 1;
 					}
 					else if (foodCoordinates[1] > _yCoord){
 						_yCoord += 1;
+					}
+					else if (foodCoordinates[1] < _yCoord){
+						_yCoord -= 1;
 					}
 					movementPoints--;
 				}
@@ -119,11 +162,13 @@ namespace Animals {
 					if (_canEatPlant && plantMap[_yCoord][_xCoord] != 0){
 						plantMap[_yCoord][_xCoord] -= 1;
 						_ateLastDay = true;
+						_wellFedDays += 1;
 					}
 					else if (_canEatAnimal){
-						for (int i = 0; i < animalList.size(); i++){
+						for (size_t i = 0; i < animalList.size(); i++){
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
 								_ateLastDay = true;
+								_wellFedDays += 1;
 								//animalList.erase(std::next(animalList.begin(), i));
 							}
 						}
@@ -132,6 +177,9 @@ namespace Animals {
 				if (!(_ateLastDay)){
 					_health--;
 				}
+
+				// Delete the food coordinates array
+				//delete[] &foodCoordinates;
 			}
 
 			// Methods for getting private members
@@ -139,6 +187,7 @@ namespace Animals {
 			bool isCarnivore() { return _canEatAnimal; }
 			bool AteToday() { return _ateLastDay; }
 			int getHealth() { return _health; }
+			int getFedDays() { return _wellFedDays; }
 
 
 			int getPositionX() { return _xCoord; }
@@ -147,5 +196,6 @@ namespace Animals {
 			// Methods for setting private members
 			void setPositionX(int newPosX) { _xCoord = newPosX; }
 			void setPositionY(int newPosY) { _yCoord = newPosY; }
+			void setWellFedDays(int newDays) { _wellFedDays = newDays; }
 	};
 }

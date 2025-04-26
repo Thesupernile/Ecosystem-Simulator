@@ -2,7 +2,7 @@
 
 namespace Utilities {
     static std::string convertToLower(std::string inputString){
-        for (int i = 0; i < inputString.length(); i++){
+        for (size_t i = 0; i < inputString.length(); i++){
             char c = inputString[i];
             if (c >= 65 && c <= 90){
                 c = c + 32;
@@ -13,13 +13,13 @@ namespace Utilities {
     }
 
     static std::string takeYNInput(){
-        bool ynInputed = true;
+        bool ynInputed = false;
         std::string userInput;
 
         do {
             std::cin >> userInput;
-            userInput = convertToLower(userInput);
-            if (userInput != "y" || userInput != "n"){
+            //userInput = convertToLower(userInput);
+            if (userInput != "y" && userInput != "n"){
                 std::cout << "Please enter either y or n\n";
             }
             else { ynInputed = true; }

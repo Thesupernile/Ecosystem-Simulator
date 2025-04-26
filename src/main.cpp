@@ -20,7 +20,7 @@ namespace Ecosystem {
         }*/
     }
 
-    static void populatePlants(std::vector<std::vector<int>> plantMap, int numPlants, const int mapHeight, const int mapWidth) {
+    static void populatePlants(std::vector<std::vector<int>> &plantMap, int numPlants, const int mapHeight, const int mapWidth) {
         /* EXAMPLE PLANT MAP
             0104
             0030
@@ -58,14 +58,14 @@ namespace Ecosystem {
         int numStarvingAnimals = 0;
 
         // Adds up all the plants
-        for (int row = 0; row < plantMap.size(); row++){
-            for (int col = 0; col < plantMap[row].size(); col++){
+        for (size_t row = 0; row < plantMap.size(); row++){
+            for (size_t col = 0; col < plantMap[row].size(); col++){
                 numPlants += plantMap[row][col];
             }
         }
 
         // Adds up all the animals
-        for (int i = 0; i < animalsList.size(); i++){
+        for (size_t i = 0; i < animalsList.size(); i++){
             if (animalsList[i].isHerbivore()){
                 numHerbivores++;
             }
@@ -80,7 +80,7 @@ namespace Ecosystem {
         std::cout << "Ecosystem Information:\n\n";
         std::cout << "There are " << numPlants << " plants in the ecosystem.\n";
         std::cout << "There are " << animalsList.size() << " animals in the ecosystem.\n";
-        std::cout << "Of these, " << numHerbivores << " are herviores and " << numCarnivores << "are carnivores.\n";
+        std::cout << "Of these, " << numHerbivores << " are herviores and " << numCarnivores << " are carnivores.\n";
         std::cout << numStarvingAnimals << " animals didn't find food today.\n";
     }
 
@@ -90,12 +90,13 @@ int main() {
     // Ecosystem Paramaters
     int mapWidth = 100;
     int mapHeight = 100;
-    int numPlants = 200;
+    int numPlants = 4000;
     double plantGrothRate = 0.8;
     int numHerbivores = 100;
     int numCarnivores = 10;
+    int wellFedDaysToReproduce = 2;
     bool runEcosystem = true;
-    std::string userInput;
+    std::string userInput = "";
 
     // Ecosystem Setup By User
     Ecosystem::instructions();
@@ -111,16 +112,21 @@ int main() {
 
     // Run simulation
     while (runEcosystem){
-        for (int i = 0; i < animalList.size(); i++){
+        for (size_t i = 0; i < animalList.size(); i++){
             animalList[i].dayProcess(animalList, plantMap);
             // If an animal is dead, we can remove it from existance
             if (animalList[i].getHealth() == 0){
                 //animalList.erase(std::next(animalList.begin(), i));
             }
+            if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
+                animalList.emplace_back(Animals::Herbivore(animalList[i].getPositionX(), animalList[i].getPositionY()));
+                animalList[i].setWellFedDays(0);
+            }
         }
 
         Ecosystem::reportEcoInformation(animalList, plantMap);
 
+        userInput = "";
         while (userInput != "y" && userInput != "n"){
             std::cout << "Would you like to simulate another day? Y/N\n";
             userInput = Utilities::takeYNInput();
