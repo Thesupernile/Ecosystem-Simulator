@@ -21,47 +21,44 @@ namespace Ecosystem {
     }
 
     static void plantDayProcess(std::vector<std::vector<int>> &plantMap, int maxPlantsPerTile, double plantGrowthChance){
+
         for (int row = 0; row < static_cast<int>(plantMap.size()); row++){
             for (int col = 0; col < static_cast<int>(plantMap[row].size()); col++){
                 int numPlants = plantMap[row][col];
-                
+        
                 for (int i = 0; i < numPlants; i++){
                     // Random chance of duplication
                     if ((double)((rand() % 1000) / 1000.0) > plantGrowthChance){
                         bool newPlantMade = false;
-
+                        // Checks to see if there is ANY valid position to place a new plant (same conditions as in the switch statements)
+                        if (!(col-1 >= 0 && plantMap[row][col-1] < maxPlantsPerTile) && !(col+1 < static_cast<int>(plantMap[0].size()) && (plantMap[row][col+1] < maxPlantsPerTile)) && !(row - 1 >= 0 && (plantMap[row-1][col] < maxPlantsPerTile)) && !(row + 1 < static_cast<int>(plantMap.size()) && (plantMap[row+1][col] < maxPlantsPerTile)) && !(plantMap[row][col] < maxPlantsPerTile)){
+                            newPlantMade = true;
+                        }
+                        // If a plant can be made, makes the plant
                         while (!newPlantMade){
                             switch (rand() % 5){
                                 case 0:
-                                    if (col-1 >= 0){
-                                        if (plantMap[row][col-1] < maxPlantsPerTile){
-                                            plantMap[row][col-1] += 1;
-                                            newPlantMade = true;
-                                        }
+                                    if (col-1 >= 0 && plantMap[row][col-1] < maxPlantsPerTile){
+                                        plantMap[row][col-1] += 1;
+                                        newPlantMade = true;
                                     }
                                     break;
                                 case 1:
-                                    if (col+1 < static_cast<int>(plantMap[0].size())){
-                                        if (plantMap[row][col+1] < maxPlantsPerTile){
-                                            plantMap[row][col+1] += 1;
-                                            newPlantMade = true;
-                                        }
+                                    if (col+1 < static_cast<int>(plantMap[0].size()) && (plantMap[row][col+1] < maxPlantsPerTile)){
+                                        plantMap[row][col+1] += 1;
+                                        newPlantMade = true;
                                     }
                                     break;
                                 case 2:
-                                    if (row - 1 >= 0){
-                                        if (plantMap[row-1][col] < maxPlantsPerTile){
-                                            plantMap[row-1][col] += 1;
-                                            newPlantMade = true;
-                                        }
+                                    if (row - 1 >= 0 && (plantMap[row-1][col] < maxPlantsPerTile)){
+                                        plantMap[row-1][col] += 1;
+                                        newPlantMade = true;
                                     }
                                     break;
                                 case 3:
-                                    if (row + 1 < static_cast<int>(plantMap.size())){
-                                        if (plantMap[row+1][col] < maxPlantsPerTile){
-                                            plantMap[row+1][col] += 1;
-                                            newPlantMade = true;
-                                        }
+                                    if (row + 1 < static_cast<int>(plantMap.size()) && (plantMap[row+1][col] < maxPlantsPerTile)){
+                                        plantMap[row+1][col] += 1;
+                                        newPlantMade = true;
                                     }
                                     break;
                                 default:
@@ -69,9 +66,10 @@ namespace Ecosystem {
                                         plantMap[row][col] += 1;
                                         newPlantMade = true;
                                     }
-                                    break; 
+                                    break;
                             }
                         }
+                    
                     }
                 }
             }
