@@ -45,14 +45,14 @@ namespace Animals {
 			void searchForAnimalFood(std::vector<Animal> &animalList, int (&foodCoordinates)[3], int depth, int x, int y){
 				// Future feature: Carnivores can eat other carnivores if they are below half hunger
 				for (auto &animal : animalList){
-					if (animal.isHerbivore()){
+					if (animal.isHerbivore() && animal.isAlive()){
 						int xDistance;
 						int yDistance;
 
 						if (animal.getPositionX() < _xCoord){ xDistance = _xCoord - animal.getPositionX(); }
 						else { xDistance = animal.getPositionX() - _xCoord; }
 
-						if (animal.getPositionX() < _yCoord){ yDistance = _yCoord - animal.getPositionY(); }
+						if (animal.getPositionY() < _yCoord){ yDistance = _yCoord - animal.getPositionY(); }
 						else { yDistance = animal.getPositionY() - _yCoord; }
 
 						if ((xDistance + yDistance < foodCoordinates[2]) && (xDistance + yDistance <= _sightRange)){

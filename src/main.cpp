@@ -9,6 +9,12 @@ namespace Ecosystem {
     
             animalList.emplace_back(Animals::Animal(x_coord, y_coord, true, false));
         }
+        for (int i = 0; i < numCarnivores; i++){
+            int x_coord = rand() % mapWidth;
+            int y_coord = rand() % mapHeight;
+            
+            animalList.emplace_back(Animals::Animal(x_coord, y_coord, false, true));
+        }
     }
 
     static void populatePlants(std::vector<std::vector<int>> &plantMap, int numPlants, const int mapHeight, const int mapWidth) {
@@ -134,8 +140,8 @@ int main() {
     int mapHeight = 100;
     int numPlants = 4000;
     double plantGrowthRate = 0.8;
-    int numHerbivores = 100;
-    int numCarnivores = 10;
+    int numHerbivores = 500;
+    int numCarnivores = 20;
     int wellFedDaysToReproduce = 2;
     int hungryDaysBeforeDeath = 2;
     int maxPlantsPerTile = 5;
@@ -287,11 +293,18 @@ int main() {
 
     // Create each animal and populate the map (Each animal is placed randomly on the board)
     Ecosystem::populateAnimals(animalList, numHerbivores, numCarnivores, mapHeight, mapWidth);
-
     Ecosystem::populatePlants(plantMap, numPlants, mapHeight, mapWidth);
+
+
+    Ecosystem::reportEcoInformation(animalList, plantMap);
+    std::cout << "Would you like to simulate another day? Y/N\n";
+    std::cin >> userInput;
+    userInput = "";
 
     // Run simulation
     while (runEcosystem){
+        Ecosystem::plantDayProcess(plantMap, maxPlantsPerTile, plantGrowthRate);
+
         for (size_t i = 0; i < animalList.size(); i++){
             if (animalList[i].isAlive()){
                 animalList[i].dayProcess(animalList, plantMap);
@@ -306,7 +319,6 @@ int main() {
             }
         }
 
-        Ecosystem::plantDayProcess(plantMap, maxPlantsPerTile, plantGrowthRate);
         Ecosystem::reportEcoInformation(animalList, plantMap);
 
         userInput = "";
