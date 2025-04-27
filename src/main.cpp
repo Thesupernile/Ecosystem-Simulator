@@ -27,7 +27,7 @@ namespace Ecosystem {
                 
                 for (int i = 0; i < numPlants; i++){
                     // Random chance of duplication
-                    if ((double)((rand() % 1000) / 1000) > plantGrowthChance){
+                    if ((double)((rand() % 1000) / 1000.0) > plantGrowthChance){
                         bool newPlantMade = false;
 
                         while (!newPlantMade){
