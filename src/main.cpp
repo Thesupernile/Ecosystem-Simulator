@@ -34,7 +34,7 @@ namespace Ecosystem {
         
                 for (int i = 0; i < numPlants; i++){
                     // Random chance of duplication
-                    if ((double)((rand() % 1000) / 1000.0) > plantGrowthChance){
+                    if ((double)((rand() % 1000) / 1000.0) < plantGrowthChance){
                         bool newPlantMade = false;
                         // Checks to see if there is ANY valid position to place a new plant (same conditions as in the switch statements)
                         if (!(col-1 >= 0 && plantMap[row][col-1] < maxPlantsPerTile) && !(col+1 < static_cast<int>(plantMap[0].size()) && (plantMap[row][col+1] < maxPlantsPerTile)) && !(row - 1 >= 0 && (plantMap[row-1][col] < maxPlantsPerTile)) && !(row + 1 < static_cast<int>(plantMap.size()) && (plantMap[row+1][col] < maxPlantsPerTile)) && !(plantMap[row][col] < maxPlantsPerTile)){
@@ -231,7 +231,7 @@ int main() {
                         else { numPlants = newNumPlants; }
                         break;
                     case 4:
-                        std::cout << "Enter new value for the maximum number of plants per tile: ";
+                        std::cout << "Enter new value for the plant growth rate: ";
                         plantGrowthRate = Utilities::takeDoubleInput();
                         std::cout << "\n";
                         break;

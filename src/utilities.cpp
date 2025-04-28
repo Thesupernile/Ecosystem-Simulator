@@ -55,14 +55,18 @@ namespace Utilities {
         do {
             std::cin >> userInput;
             doubleInputted = true;
+            pointFound = false;
 
             for (char c : userInput) {
                 if (c == '.'){
                     if (!pointFound) { pointFound = true; }
                     else { doubleInputted = false; }
                 }
-                if (c < 48 || c > 58) {
+                else if (c < 48 || c > 58) {
                     doubleInputted = false;
+                }
+
+                if (!doubleInputted) {
                     std::cout << "Please enter a valid decimal number (eg. 0.89 or 0.1)\n";
                 }
             }
