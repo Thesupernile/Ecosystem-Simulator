@@ -145,6 +145,7 @@ int main() {
     int wellFedDaysToReproduce = 2;
     int hungryDaysBeforeDeath = 2;
     int maxPlantsPerTile = 5;
+    double preditorKillChance = 0.8;
 
     bool runEcosystem = true;
     bool runProgram = true;
@@ -161,22 +162,23 @@ int main() {
 
             do{
                 std::cout << "\nEcosystem Setup Window: \n";
-                std::cout << "\nMap\n";
+                std::cout << "\nMap:\n";
                 std::cout << "1) Map Width: " << mapWidth << "\n";
                 std::cout << "2) Map Height: " << mapHeight << "\n";
 
-                std::cout << "\nPlants\n";
+                std::cout << "\nPlants:\n";
                 std::cout << "3) Initial Plants: " << numPlants << "\n";
                 std::cout << "4) Plant Growth Rate: " << plantGrowthRate << "\n";
                 std::cout << "5) Maximum number of plants per tile: " << maxPlantsPerTile << "\n";
 
-                std::cout << "\nAnimals\n";
+                std::cout << "\nAnimals:\n";
                 std::cout << "6) Intital Herbivores: " << numHerbivores << "\n";
                 std::cout << "7) Initial Carnivores: " << numCarnivores << "\n";
                 std::cout << "8) Number of consecutive fed days before an animal reproduces: " << wellFedDaysToReproduce << "\n";
                 std::cout << "9) Number of consecutive days without food before an animal dies: " << hungryDaysBeforeDeath << "\n";
+                std::cout << "10) Chance of a preditor killing it's prey: " << preditorKillChance << "\n";
 
-                std::cout << "\n10) Exit this menu" << "\n";
+                std::cout << "\n11) Exit this menu" << "\n";
 
                 std::cout << "\nEnter the number of the option you would like to choose: \n";
                 int optionChosen = Utilities::takeIntInput();
@@ -277,6 +279,11 @@ int main() {
                         std::cout << "\n";
                         break;
                     case 10:
+                        std::cout << "Enter new value for preditor kill chance: ";
+                        preditorKillChance = Utilities::takeDoubleInput();
+                        std::cout << "\n";
+                        break;
+                    case 11:
                         setupComplete = true;
                         std::cout << "\n";
                         break;
@@ -304,7 +311,7 @@ int main() {
 
             for (size_t i = 0; i < animalList.size(); i++){
                 if (animalList[i].isAlive()){
-                    animalList[i].dayProcess(animalList, plantMap);
+                    animalList[i].dayProcess(animalList, plantMap, preditorKillChance);
                     // If an animal is dead, we can remove it from existance
                     if (animalList[i].getHungryDays() >= hungryDaysBeforeDeath){
                         animalList[i].setIsAlive(false);

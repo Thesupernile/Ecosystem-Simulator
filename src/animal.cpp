@@ -87,7 +87,7 @@ namespace Animals {
 				delete &_speed;
 			}*/
 			
-			void dayProcess(std::vector<Animal> &animalList, std::vector<std::vector<int>> &plantMap){
+			void dayProcess(std::vector<Animal> &animalList, std::vector<std::vector<int>> &plantMap, double preditorKillChance){
 				// The first two indexes in coordinates are the positon (x, y) and the third is the distance between this animal and the food
 				int foodCoordinates[] = { -1, -1, _sightRange + 1 };
 				int movementPoints = _speed;
@@ -169,10 +169,12 @@ namespace Animals {
 					else if (_canEatAnimal){
 						for (size_t i = 0; i < animalList.size(); i++){
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
-								_ateLastDay = true;
-								_wellFedDays += 1;
-								_hungryDays = 0;
-								animalList[i].setIsAlive(false);
+								if (((rand() % 100) / 100) >= preditorKillChance){
+									_ateLastDay = true;
+									_wellFedDays += 1;
+									_hungryDays = 0;
+									animalList[i].setIsAlive(false);
+								}
 							}
 						}
 					}
