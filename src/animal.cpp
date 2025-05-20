@@ -65,11 +65,12 @@ namespace Animals {
 			}
 
 		public:
-			Animal(int xCoord, int yCoord, bool canEatPlants, bool canEatAnimal) {
+			Animal(int xCoord, int yCoord, bool canEatPlants, bool canEatAnimal, int sightRange) {
 				_xCoord = xCoord;
 				_yCoord = yCoord;
 				_canEatPlant = canEatPlants;
 				_canEatAnimal = canEatAnimal;
+				_sightRange = sightRange;
 			}
 
 			/* Taken out since non functional

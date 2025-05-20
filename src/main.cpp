@@ -2,18 +2,18 @@
 
 namespace Ecosystem {
 
-    static void populateAnimals(std::vector<Animals::Animal> &animalList, int numHerbivores, int numCarnivores, int mapHeight, int mapWidth){
+    static void populateAnimals(std::vector<Animals::Animal> &animalList, int numHerbivores, int numCarnivores, int mapHeight, int mapWidth, int sightRange){
         for (int i = 0; i < numHerbivores; i++){
             int x_coord = rand() % mapWidth;
             int y_coord = rand() % mapHeight;
     
-            animalList.emplace_back(Animals::Animal(x_coord, y_coord, true, false));
+            animalList.emplace_back(Animals::Animal(x_coord, y_coord, true, false, sightRange));
         }
         for (int i = 0; i < numCarnivores; i++){
             int x_coord = rand() % mapWidth;
             int y_coord = rand() % mapHeight;
             
-            animalList.emplace_back(Animals::Animal(x_coord, y_coord, false, true));
+            animalList.emplace_back(Animals::Animal(x_coord, y_coord, false, true, sightRange));
         }
     }
 
@@ -138,14 +138,15 @@ int main() {
     // Ecosystem Paramaters
     int mapWidth = 100;
     int mapHeight = 100;
-    int numPlants = 4000;
+    int numPlants = 1000;
     double plantGrowthRate = 0.8;
-    int numHerbivores = 400;
-    int numCarnivores = 20;
+    int numHerbivores = 200;
+    int numCarnivores = 10;
     int wellFedDaysToReproduce = 2;
     int hungryDaysBeforeDeath = 2;
     int maxPlantsPerTile = 5;
     double preditorKillChance = 0.8;
+    int sightRange = 5;
 
     bool runEcosystem = true;
     bool runProgram = true;
@@ -177,8 +178,9 @@ int main() {
                 std::cout << "8) Number of consecutive fed days before an animal reproduces: " << wellFedDaysToReproduce << "\n";
                 std::cout << "9) Number of consecutive days without food before an animal dies: " << hungryDaysBeforeDeath << "\n";
                 std::cout << "10) Chance of a preditor killing it's prey: " << preditorKillChance << "\n";
+                std::cout << "11) Distance animals can see: " << sightRange << "\n";
 
-                std::cout << "\n11) Exit this menu" << "\n";
+                std::cout << "\n12) Exit this menu" << "\n";
 
                 std::cout << "\nEnter the number of the option you would like to choose: \n";
                 int optionChosen = Utilities::takeIntInput();
@@ -284,6 +286,11 @@ int main() {
                         std::cout << "\n";
                         break;
                     case 11:
+                        std::cout << "Enter new value for animal sight range: ";
+                        sightRange = Utilities::takeIntInput();
+                        std::cout << "\n";
+                        break;
+                    case 12:
                         setupComplete = true;
                         std::cout << "\n";
                         break;
@@ -301,7 +308,7 @@ int main() {
         std::vector<std::vector<int>> plantMap(mapHeight, std::vector<int>(mapWidth, 0));
 
         // Create each animal and populate the map (Each animal is placed randomly on the board)
-        Ecosystem::populateAnimals(animalList, numHerbivores, numCarnivores, mapHeight, mapWidth);
+        Ecosystem::populateAnimals(animalList, numHerbivores, numCarnivores, mapHeight, mapWidth, sightRange);
         Ecosystem::populatePlants(plantMap, numPlants, mapHeight, mapWidth);
 
         // Run simulation
@@ -317,7 +324,7 @@ int main() {
                         animalList[i].setIsAlive(false);
                     }
                     if (animalList[i].getFedDays() >= wellFedDaysToReproduce){
-                        animalList.emplace_back(Animals::Animal(animalList[i].getPositionX(), animalList[i].getPositionY(), animalList[i].isHerbivore(), animalList[i].isCarnivore()));
+                        animalList.emplace_back(Animals::Animal(animalList[i].getPositionX(), animalList[i].getPositionY(), animalList[i].isHerbivore(), animalList[i].isCarnivore(), sightRange));
                         animalList[i].setWellFedDays(0);
                     }
                 }
