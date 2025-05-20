@@ -104,6 +104,7 @@ namespace Animals {
 					// Randomly moves then checks for food again
 					bool hasMoved = false;
 					while (!hasMoved){
+						srand(time(0));
 						switch (rand() % 4){
 							case 0:
 								if (_xCoord-1 >= 0){
@@ -169,6 +170,7 @@ namespace Animals {
 					else if (_canEatAnimal){
 						for (size_t i = 0; i < animalList.size(); i++){
 							if (animalList[i].getPositionX() == _xCoord && animalList[i].getPositionY() == _yCoord && animalList[i].isHerbivore()){
+								srand(time(0));
 								if (((rand() % 100) / 100) >= preditorKillChance){
 									_ateLastDay = true;
 									_wellFedDays += 1;
