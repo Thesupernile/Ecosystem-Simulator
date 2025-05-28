@@ -10,4 +10,10 @@ Features:
   * Define plant and animal duplication rates as well as how long an animal must be hungry before it dies
   * Custom Map Sizes
 
-# Screen shots
+# Screenshots
+
+![Instructions Screenshot](ProgramScreenshots/instructions.png)
+
+![Editing Ecosystem Screenshot](ProgramScreenshots/setup.png)
+
+![DayByDay Info Screenshot](ProgramScreenshots/simScreenshot.png)
